@@ -1,4 +1,6 @@
 # mod2ptm
-Incomplete tool I made to convert ProTracker MODs to Poly Tracker PTM, which I wrote a day ago in Python 3.10.
+A tool that converts ProTracker MODs to Poly Tracker PTMs. I originally wrote this a day ago, and refined it today (8/15/2022).
 
-Even though this is (mostly) format-compatible, none of the PTMs this has made could be loaded by any of my many XMPlay plugins. Nor could they be played by OpenMPT.
+Fully format compatible.
+
+Usage: mod2ptm.py module.mod module.ptm
