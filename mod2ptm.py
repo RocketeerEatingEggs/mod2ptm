@@ -172,7 +172,6 @@ with open(sys.argv[2], "wb") as PTMfile:
                         note = periodToNote(lowerPeriod, upperPeriod)
                         instrument = (((eventPart1 & 240) << 4) | (eventPart3 & 240)) >> 4
                         effectNumber = eventPart3 & 15
-                        volumeParam = effectParam
                         noNote = True
                         if note != 0:
                             noNote = False
