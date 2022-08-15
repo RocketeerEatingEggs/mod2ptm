@@ -22,8 +22,7 @@ ModPeriodTable = [
     ]
 
 ModFinetunesTable = [
-    8272, 8332, 8393, 8453, 8514, 8576, 8638, 8701, # 7808, 7864, 7921, 7978, 8037, 8095, 8153, 8213
-    8272, 8332, 8393, 8453, 8514, 8576, 8638, 8701
+    8272, 8332, 8393, 8453, 8514, 8576, 8638, 8701, 7808, 7864, 7921, 7978, 8037, 8095, 8153, 8213
     ]
 
 ModChannelsTable = [
@@ -143,7 +142,10 @@ with open(sys.argv[2], "wb") as PTMfile:
                 PTMfile.write(b"\x00\x00\x00\x00")
                 PTMfile.write(smpLengthBytes)
                 PTMfile.write(smpRepStartBytes)
-                PTMfile.write(smpRepEndBytes)
+                if smpRepLength <= 2:
+                    PTMfile.write(b"\x00\x00\x00\x00")
+                else:
+                    PTMfile.write(smpRepEndBytes)
                 PTMfile.write(b"\x00\x00\x00\x00")
                 PTMfile.write(b"\x00\x00\x00\x00")
                 PTMfile.write(b"\x00\x00\x00\x00")
