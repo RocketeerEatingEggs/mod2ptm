@@ -5,6 +5,6 @@
 import PyInstaller.__main__
 
 PyInstaller.__main__.run([
-    'mod2ptm volcmd.py',
+    'mod2ptm.py',
     '--onefile',
 ])
