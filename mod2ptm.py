@@ -1,5 +1,4 @@
-# mod2ptm volcmd.py
-# mod2ptm except it converts command 12 to a volume command
+# mod2ptm.py
 # by RocketeerEatingEggs
 
 import sys
@@ -72,6 +71,7 @@ with open(sys.argv[2], "wb") as PTMfile:
             numOrders = int.from_bytes(MODfile.read(1), byteorder="little")
             MODfile.read(1)
             numPatterns = 0
+            actualNumInstruments = 31
             for i in range(numOrders):
                 patternNumber = int.from_bytes(MODfile.read(1), byteorder="little")
                 if patternNumber > numPatterns:
