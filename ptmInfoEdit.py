@@ -4,18 +4,17 @@ from tkinter import messagebox
 from tkinter import filedialog
 from tkinter import scrolledtext
 from datetime import datetime
+panStuff = {
+    "0":0,"1":1,"2":2,"3":3,"4":4,"5":5,"6":6,"7":7,
+    "8":8,"9":9,"A":10,"B":11,"C":12,"D":13,"E":14,"F":15,
+    }
 def convStrToNum(s):
-    if s == "\x00":
-        return b"\x00"
-    sAsBytes = bytes(s, encoding="utf-8")
-    sAsNumber = int.from_bytes(sAsBytes, byteorder="little")
-    return (sAsNumber - 65).to_bytes(1, byteorder="little")
+    return panStuff[s].to_bytes(1, byteorder="little")
 def convMOD():
     blankString = ""
     openedFile = filedialog.askopenfile(mode='rb+',filetypes=['"Poly Tracker" {.ptm}'])
     modComment = commentObject.get("1.0", "end")
-    chnlPan = chnObj.get("1.0", "end")
-    
+    chnlPan = chnObj.get("1.0", "end").strip("\n").ljust(32, "0")
     commentsTable = []
     for line in modComment.split('\n'):
         commentsTable.append(line.ljust(28, "\x00"))
@@ -33,14 +32,14 @@ def convMOD():
         openedFile.seek(4, 1)
     openedFile.seek(64)
     for i in range(32):
-        openedFile.write(convStrToNum())
+        openedFile.write(convStrToNum(chnlPan[i]))
     openedFile.close()
     messagebox.showinfo(title='Information replaced',message='Information replaced.')
 mainWindow = Tk()
 frm = Frame(mainWindow, padding=4)
 frm.grid()
 Label(frm, text='Channel Panning').grid(column=0, row=0, sticky="ne")
-chnObj = scrolledtext.ScrolledText(frm, width=28, height=1)
+chnObj = Text(frm, width=32, height=1)
 chnObj.grid(column=1, row=0, sticky="w")
 Label(frm, text='Sample Names').grid(column=0, row=1, sticky="ne")
 commentObject = scrolledtext.ScrolledText(frm, width=28, height=32)
@@ -51,10 +50,8 @@ mainWindow.resizable(FALSE,FALSE)
 def about():
     aboutWindow = Toplevel(mainWindow)
     aboutWindow.resizable(FALSE,FALSE)
-    Label(aboutWindow, text='PTMInfoEdit, by RocketeerEatingEggs').grid(column=0, row=0, sticky="w")
+    Label(aboutWindow,text='PTMInfoEdit, by RocketeerEatingEggs').grid(column=0,row=0,sticky="w")
     Label(aboutWindow, text='7/30-8/2/2022').grid(column=0, row=1, sticky="w")
-    Label(aboutWindow, text='Panning:').grid(column=0, row=2, sticky="w")
-    Label(aboutWindow, text='ABCDEFGHIJKLMNOP').grid(column=0, row=3, sticky="w")
 menubar = Menu(mainWindow)
 menu_file = Menu(menubar)
 vBlankCheckVal = IntVar()
