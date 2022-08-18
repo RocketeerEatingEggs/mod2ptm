@@ -58,7 +58,7 @@ def signed2Delta(bytesObj, length):
             newObj[i] = newObj[i] - 256
     return bytearray(newObj)
 
-with open(sys.argv[2], "wb") as PTMfile:
+with open(sys.argv[2], "wb+") as PTMfile:
     with open(sys.argv[1], "rb") as MODfile:
         MODfile.seek(1080)
         numChannels = compareMagic(str(MODfile.read(4), encoding="utf-8"))
@@ -68,12 +68,11 @@ with open(sys.argv[2], "wb") as PTMfile:
             PTMfile.write(bytes(songName, encoding="utf-8"))
             PTMfile.write(b"\x1A\x07\x02\x00")
             MODfile.seek(950)
-            numOrders = int.from_bytes(MODfile.read(1), byteorder="little")
+            numOrders = int.from_bytes(MODfile.read(1), byteorder="big")
             MODfile.read(1)
             numPatterns = 0
-            actualNumInstruments = 31
             for i in range(numOrders):
-                patternNumber = int.from_bytes(MODfile.read(1), byteorder="little")
+                patternNumber = int.from_bytes(MODfile.read(1), byteorder="big")
                 if patternNumber > numPatterns:
                     numPatterns = patternNumber
             numPatterns = numPatterns + 1
@@ -121,7 +120,7 @@ with open(sys.argv[2], "wb") as PTMfile:
                 smpLength = int.from_bytes(MODfile.read(2), byteorder="big") * 2
                 smpLengths.append(smpLength)
                 smpLengthBytes = smpLength.to_bytes(4, byteorder="little")
-                smpC4Spd = ModFinetunesTable[int.from_bytes(MODfile.read(1), byteorder="little")].to_bytes(2, byteorder="little")
+                smpC4Spd=ModFinetunesTable[int.from_bytes(MODfile.read(1),byteorder="big")].to_bytes(2,byteorder="little")
                 smpVolume = MODfile.read(1)
                 smpRepStart = int.from_bytes(MODfile.read(2), byteorder="big") * 2
                 smpRepLength = int.from_bytes(MODfile.read(2), byteorder="big") * 2
@@ -129,12 +128,13 @@ with open(sys.argv[2], "wb") as PTMfile:
                 smpRepEndBytes = ((smpRepStart + smpRepLength) + 1).to_bytes(4, byteorder="little")
                 if smpLength == 0:
                     PTMfile.write(b"\x00")
+                    PTMfile.write(b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00")
                 else:
                     if smpRepLength > 2:
                         PTMfile.write(b"\x05")
                     else:
                         PTMfile.write(b"\x01")
-                PTMfile.write(b"MOD2PTM2.PTS")
+                    PTMfile.write(b"MOD2PTM2.PTS")
                 PTMfile.write(smpVolume)
                 PTMfile.write(smpC4Spd)
                 PTMfile.write(b"\x00\x00")
@@ -207,10 +207,8 @@ with open(sys.argv[2], "wb") as PTMfile:
                             if noVolume == False:
                                 PTMfile.write(volumeParam.to_bytes(1, byteorder="big"))
                     PTMfile.write(b"\x00")
-            # sample time!!!
-            PTMfile.seek(1024, 1)
+            PTMfile.seek(256, 1)
             for i in range(31):
-                # write file offsets
                 newSampOffs = PTMfile.tell()
                 PTMfile.seek(smpFileOffs[i])
                 PTMfile.write(newSampOffs.to_bytes(4, byteorder="little"))
