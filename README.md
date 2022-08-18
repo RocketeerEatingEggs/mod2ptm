@@ -4,3 +4,5 @@ A tool that converts ProTracker MODs to Poly Tracker PTMs. I originally wrote th
 Fully format compatible.
 
 Usage: mod2ptm module.mod module.ptm
+
+It also includes a gui-based sample text info editor.
